@@ -10,15 +10,31 @@ warnings.filterwarnings("ignore")
 
 
 def make_graph(stock_data, revenue_data, stock):
-    fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("Historical Share Pricce, Closing Price", "Historical Revenue"), vertical_spacing = .3)
+    fig = make_subplots(rows=2, cols=1, shared_xaxes=True,
+                        subplot_titles=("Historical Share Price, Closing Price", "Historical Revenue"),
+                        vertical_spacing = .3)
+    
     stock_data_specific = stock_data[stock_data.Date <= '2021-06-14']
     revenue_data_specific = revenue_data[reveneue_data.Date <= '2021-04-30']
-    fig.add_trace(go.Scatter(x=pd.to_datetime(stock_data_specific.Date, infer_datetime_format=True), y=stock_data_specific.Close.astype("float"), name="Share Price"), row=1, col=1)
-    fig.add_trace(go.Scatter(x=pd.to_datetime(revenue_data_specific.Date, infer_datetime_format=True), y=revenue_data_specific.Revenue.astype("float"), name="Revenue"), row=2, col=1)
+    
+    fig.add_trace(go.Scatter(x=pd.to_datetime(stock_data_specific.Date,
+                                              infer_datetime_format=True),
+                             y=stock_data_specific.Close.astype("float"),
+                             name="Share Price"),
+                  row=1, col=1)
+    
+    fig.add_trace(go.Scatter(x=pd.to_datetime(revenue_data_specific.Date,
+                                              infer_datetime_format=True),
+                             y=revenue_data_specific.Revenue.astype("float"),
+                             name="Revenue"),
+                  row=2, col=1)
+    
     fig.update_xaxes(title_text="Date", row=1, col=1)
     fig.update_xaxes(title_text="Date", row=2, col=1)
+    
     fig.update_yaxes(title_text = "Price ($US)", row=1, col=1)
     fig.update_yaxes(title_text = "Revenue ($US Milions)", row=2, col=1)
+    
     fig.update_layout(showlegend=False,
                       height=900,
                       title=stock,
@@ -48,6 +64,8 @@ def getRevenue(ticker, url, dataframe):
         dataframe = dataframe[dataframe['Revenue'] != ""]
         dataframe = dataframe.append({"Date": date, "Revenue": revenue}, ignore_index=True)
 
+    make_graph(stock_data, dataframe, ticker)
+    
     return dataframe
 
 #TSLA
